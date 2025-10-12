@@ -4,20 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John Doe Photography</title>
+    <title>Sibbe Silvén | AI Coach, Lecturer & Presenter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #111827; /* Dark Gray */
-            color: #F3F4F6; /* Light Gray */
+            background-color: #f9fafb; /* Light Gray */
+            color: #1f2937; /* Dark Gray */
         }
 
         h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800; /* Extra Bold for headings */
         }
         
         .nav-link {
@@ -25,26 +26,24 @@
         }
 
         .nav-link:hover {
-            color: #38bdf8; /* Light Blue */
+            color: #2563eb; /* Blue */
         }
         
-        .gallery-img {
+        .service-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More pronounced rounding */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
         }
 
-        .gallery-img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Modal styles */
-        .modal {
-            transition: opacity 0.3s ease;
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #38bdf8;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #2563eb; /* Blue */
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -55,129 +54,225 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .apple-button {
+            background-color: #2563eb; /* Blue */
+            color: white;
+            border-radius: 9999px; /* Pill shape */
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+
+        .apple-button:hover {
+            background-color: #1d4ed8; /* Darker Blue */
+        }
+
+        .form-input {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            outline: none;
+        }
+        
+        /* Animation Styles */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Login Modal Styles */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 
 <body>
 
+    <!-- Login Modal -->
+    <div id="auth-modal" class="modal-backdrop fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-md p-8 transform scale-95">
+            <h2 id="modal-title" class="text-3xl font-bold text-center text-gray-900 mb-2">Login</h2>
+            <p id="modal-subtitle" class="text-center text-gray-600 mb-6">Access your dashboard.</p>
+            
+            <form id="auth-form" class="space-y-4">
+                <div>
+                    <label for="auth-email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="auth-email" required class="mt-1 block w-full form-input py-2 px-3 text-gray-800">
+                </div>
+                <div>
+                    <label for="auth-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="auth-password" required class="mt-1 block w-full form-input py-2 px-3 text-gray-800">
+                </div>
+                <p id="auth-error" class="text-sm text-red-600 hidden"></p>
+                <div>
+                    <button type="submit" id="auth-submit-btn" class="w-full apple-button py-3 px-6">Login</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-6">
+                <a href="#" id="auth-toggle" class="text-sm text-blue-600 hover:underline">Don't have an account? Sign Up</a>
+            </div>
+            
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+
+
     <!-- Header -->
-    <header class="bg-gray-900/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-lg">
+    <header class="bg-white/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-40 shadow-sm">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white">John Doe</a>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="nav-link text-gray-300">Home</a>
-                <a href="#portfolio" class="nav-link text-gray-300">Portfolio</a>
-                <a href="#about" class="nav-link text-gray-300">About</a>
-                <a href="#contact" class="nav-link text-gray-300">Contact</a>
+            <a href="#" class="text-2xl font-bold text-gray-900">Sibbe Silvén</a>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#home" class="nav-link text-gray-600">Home</a>
+                <a href="#services" class="nav-link text-gray-600">Services</a>
+                <a href="#about" class="nav-link text-gray-600">About</a>
+                <a href="#contact" class="nav-link text-gray-600">Contact</a>
+                <button id="login-btn" class="apple-button py-2 px-5">Login</button>
+                <button id="logout-btn" class="hidden apple-button bg-gray-600 hover:bg-gray-700 py-2 px-5">Logout</button>
             </nav>
-            <button id="mobile-menu-button" class="md:hidden text-white">
+            <button id="mobile-menu-button" class="md:hidden text-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
             </button>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-2">
-            <a href="#home" class="block nav-link text-gray-300">Home</a>
-            <a href="#portfolio" class="block nav-link text-gray-300">Portfolio</a>
-            <a href="#about" class="block nav-link text-gray-300">About</a>
-            <a href="#contact" class="block nav-link text-gray-300">Contact</a>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-2 border-t border-gray-200">
+            <a href="#home" class="block nav-link text-gray-600">Home</a>
+            <a href="#services" class="block nav-link text-gray-600">Services</a>
+            <a href="#about" class="block nav-link text-gray-600">About</a>
+            <a href="#contact" class="block nav-link text-gray-600">Contact</a>
+            <button id="mobile-login-btn" class="w-full apple-button py-2 px-5 mt-2">Login</button>
+            <button id="mobile-logout-btn" class="hidden w-full apple-button bg-gray-600 hover:bg-gray-700 py-2 px-5 mt-2">Logout</button>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="h-screen bg-cover bg-center flex items-center justify-center" style="background-image: url('https://placehold.co/1920x1080/2d3748/f7fafc?text=Stunning+Landscape')">
-        <div class="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg">
-            <h1 class="text-5xl md:text-7xl font-bold mb-4">Capturing Moments, Creating Memories</h1>
-            <p class="text-lg md:text-xl mb-8">Exploring the world through my lens.</p>
-            <a href="#portfolio" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">View My Work</a>
+    <section id="home" class="h-screen bg-fixed bg-cover bg-center flex items-center justify-center pt-16" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIDBIorGbaNJVZ1sBPWlDdfzIU6wphRsF2_A&s');">
+        <div class="text-center p-8 fade-in-section is-visible bg-white/30 backdrop-blur-md rounded-xl">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 text-gray-900">Empowering People with AI</h1>
+            <p class="text-lg md:text-xl mb-8 text-gray-800 max-w-3xl mx-auto">AI coach, lecturer, and presenter delivering engaging workshops, courses, and podcasts to unlock your potential.</p>
+            <a href="#services" class="apple-button py-3 px-8 inline-block">Explore My Services</a>
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-12">My Portfolio</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Image 1 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/718096/f7fafc?text=Portrait+1', 'Serene Portrait', 'A captivating portrait taken in natural light.')">
-                    <img src="https://placehold.co/800x600/718096/f7fafc?text=Portrait+1" alt="Portrait 1" class="w-full h-full object-cover gallery-img">
-                </div>
-                <!-- Image 2 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/e53e3e/f7fafc?text=Urban+Shot', 'Urban Exploration', 'The vibrant life of the city streets captured at dusk.')">
-                    <img src="https://placehold.co/800x600/e53e3e/f7fafc?text=Urban+Shot" alt="Urban Shot" class="w-full h-full object-cover gallery-img">
-                </div>
-                <!-- Image 3 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/38a169/f7fafc?text=Nature+Wonder', 'Forest Trail', 'Sunlight filtering through the canopy on a peaceful morning hike.')">
-                    <img src="https://placehold.co/800x600/38a169/f7fafc?text=Nature+Wonder" alt="Nature Wonder" class="w-full h-full object-cover gallery-img">
-                </div>
-                <!-- Image 4 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/d69e2e/f7fafc?text=Wildlife', 'Majestic Eagle', 'An eagle in flight, showcasing its impressive wingspan.')">
-                    <img src="https://placehold.co/800x600/d69e2e/f7fafc?text=Wildlife" alt="Wildlife" class="w-full h-full object-cover gallery-img">
-                </div>
-                <!-- Image 5 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/805ad5/f7fafc?text=Abstract', 'Light and Shadow', 'An abstract photo playing with geometric shapes and light.')">
-                    <img src="https://placehold.co/800x600/805ad5/f7fafc?text=Abstract" alt="Abstract" class="w-full h-full object-cover gallery-img">
-                </div>
-                <!-- Image 6 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer" onclick="openModal('https://placehold.co/800x600/3182ce/f7fafc?text=Seascape', 'Ocean Calm', 'The serene beauty of the ocean at sunrise.')">
-                    <img src="https://placehold.co/800x600/3182ce/f7fafc?text=Seascape" alt="Seascape" class="w-full h-full object-cover gallery-img">
+    <!-- Services Section -->
+    <section id="services" class="py-20 relative" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXBXTTBWHweGlQWECh5yTQMMcezkk7TGEy5A&s'); background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;">
+        <div class="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="fade-in-section">
+                <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">What I Offer</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Service 1: Workshops -->
+                    <div class="service-card p-8 text-center">
+                        <div class="flex justify-center items-center mb-4 bg-yellow-100 rounded-full w-16 h-16 mx-auto">
+                            <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a3.004 3.004 0 015.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-gray-900">AI Workshops</h3>
+                        <p class="text-gray-600">Interactive, hands-on workshops designed to equip your team with practical AI skills and knowledge.</p>
+                    </div>
+                     <!-- Service 2: Presentations -->
+                    <div class="service-card p-8 text-center" style="transition-delay: 100ms;">
+                        <div class="flex justify-center items-center mb-4 bg-yellow-100 rounded-full w-16 h-16 mx-auto">
+                            <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.875 9.168-4.684C19.486 3.072 20 3.964 20 5c0 4.418-3.582 8-8 8s-8-3.582-8-8c0-1.036.514-1.928 1.317-2.684A4.005 4.005 0 017 6h1.832" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-gray-900">Presentations</h3>
+                        <p class="text-gray-600">Engaging keynotes and presentations that demystify AI, inspiring audiences with future possibilities.</p>
+                    </div>
+                    <!-- Service 3: Courses -->
+                    <div class="service-card p-8 text-center" style="transition-delay: 200ms;">
+                        <div class="flex justify-center items-center mb-4 bg-yellow-100 rounded-full w-16 h-16 mx-auto">
+                           <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-gray-900">Online Courses</h3>
+                        <p class="text-gray-600">In-depth online courses and learning materials for individuals and organizations to master AI concepts.</p>
+                    </div>
+                    <!-- Service 4: Podcasts & Coaching -->
+                    <div class="service-card p-8 text-center" style="transition-delay: 300ms;">
+                        <div class="flex justify-center items-center mb-4 bg-yellow-100 rounded-full w-16 h-16 mx-auto">
+                            <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-gray-900">Podcasts & Coaching</h3>
+                        <p class="text-gray-600">Thought-provoking podcast episodes and one-on-one coaching to navigate the evolving AI landscape.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-8 md:mb-0">
-                <img src="https://placehold.co/600x600/4a5568/f7fafc?text=Your+Photo" alt="John Doe" class="rounded-full shadow-lg mx-auto" style="max-width: 300px;">
-            </div>
-            <div class="md:w-1/2 md:pl-12">
-                <h2 class="text-4xl font-bold mb-4">About Me</h2>
-                <div id="bio-content">
-                    <p class="text-gray-400 mb-4">
-                        I am a passionate photographer with a love for capturing the beauty of the world around us. My journey started over a decade ago, and since then, I've been dedicated to honing my craft.
-                    </p>
-                    <p class="text-gray-400">
-                        Whether it's the raw emotion of a portrait, the vibrant energy of a cityscape, or the serene tranquility of nature, I strive to tell a story with every shot. I believe that a photograph is more than just an image; it's a moment frozen in time.
-                    </p>
+    <section id="about" class="py-20 bg-white overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="fade-in-section flex flex-col md:flex-row items-center gap-12">
+                 <div class="md:w-1/2">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGtLmIbDChMpusc47WyOcGR10VYw6PhnZC9A&s" alt="Sibbe Silvén" class="rounded-full shadow-lg mx-auto" style="max-width: 300px;">
                 </div>
-                <div class="mt-6">
-                     <h3 class="text-lg font-semibold text-white mb-2">✨ Need help with your bio?</h3>
-                     <p class="text-sm text-gray-400 mb-2">Enter a few keywords about your style (e.g., "moody, cinematic, storyteller").</p>
-                     <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="text" id="bio-keywords" placeholder="Keywords..." class="flex-grow bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500">
-                        <button id="generate-bio-btn" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 flex items-center justify-center gap-2">
-                            <span>Generate Bio</span>
-                        </button>
-                     </div>
-                     <div id="bio-loader" class="hidden mt-4 flex justify-center"><div class="loader"></div></div>
+                <div class="md:w-1/2">
+                    <h2 class="text-4xl font-bold mb-4 text-gray-900">About Me</h2>
+                    <div id="bio-content" class="space-y-4 text-gray-600">
+                        <p>
+                            I'm Sibbe Silvén, an AI coach and educator passionate about making artificial intelligence accessible and actionable for everyone. My mission is to bridge the gap between complex technology and practical application, empowering professionals and organizations to innovate and thrive.
+                        </p>
+                        <p>
+                          Through dynamic presentations, hands-on workshops, and insightful coaching, I help audiences understand the transformative power of AI. Whether you're looking to upskill your team, inspire your conference, or develop a deeper understanding of AI, I'm here to guide you.
+                        </p>
+                    </div>
+                    <div class="mt-8 p-6 bg-gray-50 rounded-2xl shadow-sm border border-gray-200">
+                         <h3 class="text-lg font-bold text-gray-900 mb-2">✨ Refine My Professional Bio</h3>
+                         <p class="text-sm text-gray-600 mb-4">Enter keywords to adjust the tone (e.g., "more visionary, motivational").</p>
+                         <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="bio-keywords" placeholder="Keywords..." class="flex-grow form-input py-2 px-3 text-gray-800">
+                            <button id="generate-bio-btn" class="apple-button py-2 px-4 flex items-center justify-center gap-2">
+                                <span>Generate Bio</span>
+                            </button>
+                         </div>
+                         <div id="bio-loader" class="hidden mt-4 flex justify-center"><div class="loader"></div></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-12">Get In Touch</h2>
-            <div class="max-w-2xl mx-auto">
+    <section id="contact" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 fade-in-section">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-900">Book a Workshop or Presentation</h2>
+             <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                Ready to bring the future of AI to your organization or event? Reach out to discuss your needs for workshops, keynote presentations, or corporate training. Let's create an impactful learning experience together.
+            </p>
+            <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
                 <form action="#" method="POST" class="space-y-6">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
-                        <input type="text" id="name" name="name" required class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" name="name" required class="mt-1 block w-full form-input py-2 px-3 text-gray-800">
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-                        <input type="email" id="email" name="email" required class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full form-input py-2 px-3 text-gray-800">
                     </div>
                     <div>
-                        <label for="message" class="block text-sm font-medium text-gray-300">Message</label>
-                        <textarea id="message" name="message" rows="4" required class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500"></textarea>
+                        <label for="message" class="block text-sm font-medium text-gray-700">Tell me about your event or needs</label>
+                        <textarea id="message" name="message" rows="4" required class="mt-1 block w-full form-input py-2 px-3 text-gray-800"></textarea>
                     </div>
                     <div>
-                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-md transition duration-300">Send Message</button>
+                        <button type="submit" class="w-full apple-button py-3 px-6">Send Inquiry</button>
                     </div>
                 </form>
             </div>
@@ -185,65 +280,82 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 py-8">
-        <div class="container mx-auto px-6 text-center text-gray-400">
+    <footer class="bg-gray-200 py-8">
+        <div class="container mx-auto px-6 text-center text-gray-500">
             <div class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="hover:text-white transition duration-300">
-                    <!-- Instagram Icon -->
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.343 2.525c.636-.247 1.363-.416 2.427-.465C9.792 2.013 10.146 2 12.315 2zm-1.002 6.37c-1.353 0-2.45 1.097-2.45 2.45s1.097 2.45 2.45 2.45 2.45-1.097 2.45-2.45-1.097-2.45-2.45-2.45zm0 4.2c-.965 0-1.75-.785-1.75-1.75s.785-1.75 1.75-1.75 1.75.785 1.75 1.75-.785 1.75-1.75 1.75zm5.352-6.522c-.414 0-.75.336-.75.75s.336.75.75.75.75-.336.75-.75-.336-.75-.75-.75z" clip-rule="evenodd" /></svg>
+                 <a href="#" class="hover:text-blue-600 transition duration-300">
+                    <!-- LinkedIn Icon -->
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
                 </a>
-                <a href="#" class="hover:text-white transition duration-300">
+                <a href="#" class="hover:text-blue-600 transition duration-300">
                     <!-- Twitter Icon -->
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
                 </a>
             </div>
-            <p>&copy; 2025 John Doe Photography. All Rights Reserved.</p>
+            <p>&copy; 2025 Sibbe Silvén. All Rights Reserved.</p>
         </div>
     </footer>
+    
+    <script type="module">
+        // --- Import Firebase Modules ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
-        <div class="bg-gray-900 rounded-lg shadow-2xl max-w-4xl max-h-full w-full overflow-auto relative">
-             <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <div class="p-4 md:p-8">
-                <img id="modalImage" src="" alt="Enlarged view" class="w-full h-auto rounded-lg mb-4">
-                <h3 id="modalTitle" class="text-2xl font-bold text-white mb-2"></h3>
-                <p id="modalDescription" class="text-gray-400 min-h-[40px]"></p>
-                <div class="mt-4">
-                    <button id="generate-desc-btn" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 flex items-center justify-center gap-2">
-                        <span>✨ Generate Description</span>
-                    </button>
-                    <div id="desc-loader" class="hidden mt-2"><div class="loader"></div></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script>
         // --- Gemini API Configuration ---
         const API_KEY = ""; // Leave this empty, it will be handled by the environment.
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-
-        let currentPhotoTitle = '';
         
+        // --- Firebase Configuration ---
+        // IMPORTANT: Replace with your actual Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+
         // --- UI Elements ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        const modal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const generateDescBtn = document.getElementById('generate-desc-btn');
-        const descLoader = document.getElementById('desc-loader');
         const generateBioBtn = document.getElementById('generate-bio-btn');
         const bioKeywordsInput = document.getElementById('bio-keywords');
         const bioContent = document.getElementById('bio-content');
         const bioLoader = document.getElementById('bio-loader');
+        const heroSection = document.getElementById('home');
+        
+        // Auth UI Elements
+        const authModal = document.getElementById('auth-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+        const authForm = document.getElementById('auth-form');
+        const authEmailInput = document.getElementById('auth-email');
+        const authPasswordInput = document.getElementById('auth-password');
+        const authError = document.getElementById('auth-error');
+        const authToggle = document.getElementById('auth-toggle');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
 
+        let isLoginMode = true;
 
         /**
          * A generic function to call the Gemini API with exponential backoff.
@@ -289,36 +401,12 @@
             }
         }
 
-
-        // --- Feature: AI Photo Description ---
-        async function generatePhotoDescription() {
-            if (!currentPhotoTitle) return;
-
-            generateDescBtn.disabled = true;
-            generateDescBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            descLoader.classList.remove('hidden');
-            modalDescription.textContent = 'Generating...';
-
-            const prompt = `You are a professional photographer. Write a short, evocative, and creative description (2-3 sentences) for a photograph titled "${currentPhotoTitle}". Focus on the mood, atmosphere, and storytelling elements.`;
-            
-            const generatedText = await callGeminiAPI(prompt);
-
-            if (generatedText) {
-                modalDescription.textContent = generatedText;
-            } else {
-                modalDescription.textContent = 'Could not generate a description. Please try again later.';
-            }
-
-            generateDescBtn.disabled = false;
-            generateDescBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            descLoader.classList.add('hidden');
-        }
-
         // --- Feature: AI Bio Generator ---
         async function generateBio() {
             const keywords = bioKeywordsInput.value.trim();
             if (!keywords) {
-                alert('Please enter some keywords about your photography style.');
+                // Using a custom message box instead of alert
+                showAuthError('Please enter some keywords to refine the bio.');
                 return;
             }
             
@@ -327,16 +415,15 @@
             bioLoader.classList.remove('hidden');
             bioContent.innerHTML = '';
 
-            const prompt = `You are a professional copywriter. Write a compelling "About Me" bio (2 paragraphs) for a photographer. Their style is described as: "${keywords}". The tone should be passionate, professional, and approachable.`;
+            const prompt = `You are a professional copywriter. Write a compelling "About Me" bio (2 paragraphs) for an AI coach, lecturer, and presenter named Sibbe Silvén. The tone should be adjusted based on these keywords: "${keywords}". The base tone is expert, engaging, and inspiring.`;
             
             const generatedText = await callGeminiAPI(prompt);
             
             if (generatedText) {
-                // Format the response into paragraphs
-                const paragraphs = generatedText.split('\n').filter(p => p.trim() !== '').map(p => `<p class="text-gray-400 mb-4">${p}</p>`).join('');
+                const paragraphs = generatedText.split('\n').filter(p => p.trim() !== '').map(p => `<p>${p}</p>`).join('');
                 bioContent.innerHTML = paragraphs;
             } else {
-                bioContent.innerHTML = '<p class="text-red-400">Could not generate a bio. Please try again later.</p>';
+                bioContent.innerHTML = '<p class="text-red-500">Could not generate a bio. Please try again later.</p>';
             }
 
             generateBioBtn.disabled = false;
@@ -344,41 +431,147 @@
             bioLoader.classList.add('hidden');
         }
 
+        // --- Animations on Scroll ---
+        const handleScrollAnimations = () => {
+            const sections = document.querySelectorAll('.fade-in-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Optional: stop observing after it's visible
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            sections.forEach(section => {
+                // Animate each child card with a delay
+                const cards = section.querySelectorAll('.service-card');
+                if (cards.length > 0) {
+                     observer.observe(section);
+                } else {
+                    observer.observe(section);
+                }
+            });
+        };
+        
+        // --- Parallax Effect ---
+        // This is handled via CSS `background-attachment: fixed` now for simplicity and performance.
+        // const handleParallax = () => {
+        //     const scrollPosition = window.pageYOffset;
+        //     heroSection.style.backgroundPositionY = scrollPosition * 0.5 + 'px';
+        // };
+
+        // --- Firebase Authentication Logic ---
+
+        // Show/hide Auth Modal
+        const openAuthModal = () => {
+            authModal.classList.remove('hidden');
+            setTimeout(() => {
+                authModal.classList.remove('opacity-0');
+                authModal.querySelector('.modal-content').classList.remove('scale-95');
+            }, 10);
+        };
+
+        const closeAuthModal = () => {
+            authModal.classList.add('opacity-0');
+            authModal.querySelector('.modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                authModal.classList.add('hidden');
+            }, 300);
+        };
+        
+        // Display auth errors
+        const showAuthError = (message) => {
+            authError.textContent = message;
+            authError.classList.remove('hidden');
+        }
+
+        // Handle form submission for login/signup
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
+            authError.classList.add('hidden');
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+                closeAuthModal();
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        });
+
+        // Toggle between Login and Sign Up
+        authToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                modalTitle.textContent = 'Login';
+                modalSubtitle.textContent = 'Access your dashboard.';
+                authSubmitBtn.textContent = 'Login';
+                authToggle.textContent = 'Don\'t have an account? Sign Up';
+            } else {
+                modalTitle.textContent = 'Sign Up';
+                modalSubtitle.textContent = 'Create a new account.';
+                authSubmitBtn.textContent = 'Sign Up';
+                authToggle.textContent = 'Already have an account? Login';
+            }
+            authError.classList.add('hidden');
+        });
+
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                loginBtn.classList.add('hidden');
+                mobileLoginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                mobileLogoutBtn.classList.remove('hidden');
+            } else {
+                // User is signed out
+                loginBtn.classList.remove('hidden');
+                mobileLoginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                mobileLogoutBtn.classList.add('hidden');
+            }
+        });
+        
+        // Logout handler
+        const handleLogout = () => {
+            signOut(auth).catch((error) => console.error("Logout Error:", error));
+        };
+
+
         // --- Event Listeners ---
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
         
-        generateDescBtn.addEventListener('click', generatePhotoDescription);
         generateBioBtn.addEventListener('click', generateBio);
 
+        document.addEventListener('DOMContentLoaded', handleScrollAnimations);
+        // window.addEventListener('scroll', handleParallax); // No longer needed for CSS parallax
 
-        // --- Modal Functionality ---
-        function openModal(imgSrc, title, description) {
-            modalImage.src = imgSrc;
-            modalTitle.textContent = title;
-            modalDescription.textContent = description;
-            currentPhotoTitle = title;
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            document.body.style.overflow = 'auto';
-        }
-        
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
+        // Auth Event Listeners
+        loginBtn.addEventListener('click', openAuthModal);
+        mobileLoginBtn.addEventListener('click', openAuthModal);
+        closeModalBtn.addEventListener('click', closeAuthModal);
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                closeAuthModal();
             }
         });
+        logoutBtn.addEventListener('click', handleLogout);
+        mobileLogoutBtn.addEventListener('click', handleLogout);
 
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
     </script>
 
 </body>
